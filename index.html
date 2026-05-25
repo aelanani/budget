@@ -35,7 +35,6 @@ body { font-family: var(--font); background: var(--bg); color: var(--txt); min-h
 .sync-status { font-size: 10px; margin-top: 4px; }
 .sync-ok { color: var(--green); } .sync-err { color: var(--red); } .sync-load { color: var(--txt3); }
 .years-scroll { flex: 1; overflow-y: auto; padding: 8px 0; }
-.year-group {}
 .year-hd { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; cursor: pointer; user-select: none; }
 .year-hd:hover { background: var(--bg3); }
 .year-hd-left { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--txt2); }
@@ -125,9 +124,6 @@ body { font-family: var(--font); background: var(--bg); color: var(--txt); min-h
 .btn-ok { padding: 6px 16px; border-radius: var(--rad); border: none; background: var(--bluebg); color: var(--bluetc); font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--font); }
 .btn-cancel { padding: 6px 12px; border-radius: var(--rad); border: 1px solid var(--brd2); background: none; font-size: 12px; cursor: pointer; font-family: var(--font); color: var(--txt2); }
 
-/* ═══ DESKTOP ═══ */
-.app { display: flex; flex-direction: row; width: 100%; height: 100vh; overflow: hidden; }
-
 /* ═══ TABLET ═══ */
 @media (max-width: 900px) {
   .bar-label { width: 85px; font-size: 10px; }
@@ -137,62 +133,15 @@ body { font-family: var(--font); background: var(--bg); color: var(--txt); min-h
 /* ═══ MOBILE ═══ */
 @media (max-width: 768px) {
   html, body { overflow-x: hidden !important; max-width: 100vw; }
-
-  /* ── App container: single column, full width ── */
-  .app {
-    display: block !important;
-    width: 100% !important;
-    height: 100vh;
-    overflow-y: auto;
-    overflow-x: hidden !important;
-  }
-
-  /* ── Main content: full width, no side margin ── */
-  .main {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100vw !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    min-width: 0 !important;
-  }
-
-  /* ── Sidebar: fixed drawer, hidden RIGHT off-screen ── */
-  .sidebar {
-    position: fixed !important;
-    top: 0 !important;
-    right: -280px !important;
-    width: 280px !important;
-    min-width: 280px !important;
-    height: 100vh !important;
-    z-index: 9999 !important;
-    transition: right .3s ease !important;
-    box-shadow: -4px 0 24px rgba(0,0,0,.3) !important;
-    background: var(--bg2) !important;
-    overflow-y: auto !important;
-  }
-  .sidebar.mob-open {
-    right: 0 !important;
-  }
-  /* Neutralise desktop collapsed state on mobile */
-  .sidebar.collapsed {
-    width: 280px !important;
-    right: -280px !important;
-    opacity: 1 !important;
-  }
-  .sidebar.collapsed.mob-open {
-    right: 0 !important;
-  }
-  .sidebar.collapsed .sidebar-inner {
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
+  .app { display: block !important; width: 100% !important; height: 100vh; overflow-y: auto; overflow-x: hidden !important; }
+  .main { display: block !important; width: 100% !important; max-width: 100vw !important; margin: 0 !important; padding: 0 !important; min-width: 0 !important; }
+  .sidebar { position: fixed !important; top: 0 !important; right: -280px !important; width: 280px !important; min-width: 280px !important; height: 100vh !important; z-index: 9999 !important; transition: right .3s ease !important; box-shadow: -4px 0 24px rgba(0,0,0,.3) !important; background: var(--bg2) !important; overflow-y: auto !important; }
+  .sidebar.mob-open { right: 0 !important; }
+  .sidebar.collapsed { width: 280px !important; right: -280px !important; opacity: 1 !important; }
+  .sidebar.collapsed.mob-open { right: 0 !important; }
+  .sidebar.collapsed .sidebar-inner { opacity: 1 !important; pointer-events: auto !important; }
   .sidebar-toggle { display: none !important; }
-
-  /* ── Hamburger button visible ── */
   .mob-menu-btn { display: flex !important; }
-
-  /* ── Layout helpers ── */
   .grid2 { display: block !important; }
   .grid2 > * { width: 100% !important; margin-bottom: 12px; }
   .full { grid-column: auto; }
@@ -215,14 +164,14 @@ body { font-family: var(--font); background: var(--bg); color: var(--txt); min-h
   <div class="sidebar" id="sidebar">
     <button class="sidebar-toggle" onclick="toggleSidebar()" title="إخفاء/إظهار القائمة"><span class="toggle-arrow">◀</span></button>
     <div class="sidebar-inner">
-    <div class="sidebar-logo">
-      <h1>💰 ميزانيتي</h1>
-      <p>مصروفات ودخل</p>
-      <div class="sync-status sync-load" id="syncStatus">⏳ جاري التحميل...</div>
+      <div class="sidebar-logo">
+        <h1>💰 ميزانيتي</h1>
+        <p>مصروفات ودخل</p>
+        <div class="sync-status sync-load" id="syncStatus">⏳ جاري التحميل...</div>
+      </div>
+      <div class="years-scroll" id="yearsList"></div>
+      <button class="add-year-btn" onclick="openModal('year')">+ سنة جديدة</button>
     </div>
-    <div class="years-scroll" id="yearsList"></div>
-    <button class="add-year-btn" onclick="openModal('year')">+ سنة جديدة</button>
-    </div><!-- end sidebar-inner -->
   </div>
   <div id="sidebarBackdrop" onclick="toggleSidebar()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:9998;"></div>
   <div class="main">
@@ -283,15 +232,22 @@ body { font-family: var(--font); background: var(--bg); color: var(--txt); min-h
   </div>
 </div>
 
-<!-- MODALS -->
 <div class="overlay" id="mYear"><div class="modal"><h3>إضافة سنة جديدة</h3><label>السنة</label><input id="mYearInput" type="number" placeholder="2027"><div class="modal-btns"><button class="btn-cancel" onclick="closeModals()">إلغاء</button><button class="btn-ok" onclick="confirmYear()">إضافة</button></div></div></div>
 <div class="overlay" id="mMonth"><div class="modal"><h3 id="mMonthTitle">إضافة شهر</h3><label>اسم الشهر</label><input id="mMonthInput" type="text" placeholder="مثال: أغسطس"><div class="modal-btns"><button class="btn-cancel" onclick="closeModals()">إلغاء</button><button class="btn-ok" onclick="confirmMonth()">إضافة</button></div></div></div>
 <div class="overlay" id="mRenameM"><div class="modal"><h3>تعديل اسم الشهر</h3><label>الاسم</label><input id="mRenameMInput" type="text"><div class="modal-btns"><button class="btn-cancel" onclick="closeModals()">إلغاء</button><button class="btn-ok" onclick="confirmRenameM()">حفظ</button></div></div></div>
 <div class="overlay" id="mRenameY"><div class="modal"><h3>تعديل اسم السنة</h3><label>الاسم</label><input id="mRenameYInput" type="text"><div class="modal-btns"><button class="btn-cancel" onclick="closeModals()">إلغاء</button><button class="btn-ok" onclick="confirmRenameY()">حفظ</button></div></div></div>
 
+<div class="overlay" id="authOverlay" style="z-index: 10000; background: rgba(248,248,248,0.95); display: flex;">
+  <div class="modal" style="text-align: center; max-width: 320px; box-shadow: none; border: 1px solid var(--brd);">
+    <h3 style="font-size:16px; margin-bottom:8px;">🔒 جاري التحقق الآمن</h3>
+    <p id="authStatusText" style="font-size:12px; color:var(--txt2);">جاري تسجيل الدخول التلقائي لحسابك...</p>
+  </div>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBVDXs7msm8UKHfrQergD4DHFBPtwRmnCk",
@@ -306,12 +262,17 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app);
 const dbRef = ref(db, 'budget');
+
+// الحساب الشخصي الثابت لتسجيل الدخول التلقائي
+const MY_EMAIL = "a.elanani.ae@gmail.com";
+const MY_PASS = "0115171553";
 
 const CATS = [
   {k:'fawateer',n:'فواتير وعمولات',c:'#2563EB',bg:'#EFF6FF',tc:'#1D4ED8'},
   {k:'beit',    n:'بيت',           c:'#7C3AED',bg:'#F5F3FF',tc:'#6D28D9'},
-  {k:'arabia',  n:'عربية',         c:'#D97706',bg:'#FFFBEB',tc:'#B45309'},
+  {k:'arabia',  n:'عربية',          c:'#D97706',bg:'#FFFBEB',tc:'#B45309'},
   {k:'personal',n:'شخصية',         c:'#16a34a',bg:'#F0FDF4',tc:'#15803D'},
   {k:'lillah',  n:'لله',           c:'#DC2626',bg:'#FEF2F2',tc:'#B91C1C'},
 ];
@@ -358,54 +319,71 @@ const fmt = n => Number(n).toLocaleString('ar-EG',{minimumFractionDigits:2,maxim
 const curY = () => S.years[S.curY];
 const curM = () => curY()?.months[S.curM];
 
-function setStatus(msg,cls){ const el=document.getElementById('syncStatus'); el.textContent=msg; el.className='sync-status '+cls; }
+function setStatus(msg,cls){ const el=document.getElementById('syncStatus'); if(el) { el.textContent=msg; el.className='sync-status '+cls; } }
 
-// Load from Firebase (realtime)
-onValue(dbRef, (snapshot) => {
-  const data = snapshot.val();
-  if(data) {
-    // preserve UI state
-    const uiState = {curY:S.curY,curM:S.curM,curCat:S.curCat,curInc:S.curInc,curSec:S.curSec,curPage:S.curPage,aYear:S.aYear};
-    S = {...data, ...uiState};
-    if(!S.years) S.years = JSON.parse(JSON.stringify(SEED.years));
-    // Restore any missing years from SEED (e.g. 2025 if accidentally deleted)
-    SEED.years.forEach(seedYear => {
-      const exists = S.years.find(y => y.name === seedYear.name);
-      if(!exists) {
-        // Insert in correct position (sorted by name)
-        const insertIdx = S.years.findIndex(y => y.name > seedYear.name);
-        if(insertIdx === -1) S.years.push(JSON.parse(JSON.stringify(seedYear)));
-        else S.years.splice(insertIdx, 0, JSON.parse(JSON.stringify(seedYear)));
-        // Save restored data back to Firebase
-        setTimeout(() => save(), 800);
-      }
-    });
-    S.years.forEach(y=>y.months.forEach(m=>{if(!m.incomeSources)m.incomeSources=[];}));
-    // Re-clamp curY index
-    if(S.curY >= S.years.length) S.curY = S.years.length - 1;
-    // On first load: restore last visited month from localStorage, else default to last year
-    if(!isLoaded) {
-      const savedY = localStorage.getItem('budget_curY');
-      const savedM = localStorage.getItem('budget_curM');
-      if(savedY !== null && savedM !== null) {
-        const sy = parseInt(savedY), sm = parseInt(savedM);
-        if(sy >= 0 && sy < S.years.length && sm >= 0 && sm < (S.years[sy]?.months?.length||0)) {
-          S.curY = sy; S.curM = sm;
+// تفعيل نظام تسجيل الدخول التلقائي والمراقبة
+onAuthStateChanged(auth, (user) => {
+  const overlay = document.getElementById('authOverlay');
+  const txt = document.getElementById('authStatusText');
+  
+  if (user) {
+    if(overlay) overlay.style.display = 'none';
+    initFirebaseSync();
+  } else {
+    if(overlay) overlay.style.display = 'flex';
+    if(txt) txt.textContent = "جاري الاتصال الآمن بالسيرفر...";
+    
+    signInWithEmailAndPassword(auth, MY_EMAIL, MY_PASS)
+      .catch(err => {
+        if(txt) {
+          txt.innerHTML = `<span style="color:var(--red)">فشل تسجيل الدخول التلقائي!</span><br><small style="font-size:10px;">تأكد من تفعيل الـ Authentication في لوحة Firebase.</small>`;
+        }
+        setStatus('❌ خطأ في التحقق', 'sync-err');
+      });
+  }
+});
+
+function initFirebaseSync() {
+  onValue(dbRef, (snapshot) => {
+    const data = snapshot.val();
+    if(data) {
+      const uiState = {curY:S.curY,curM:S.curM,curCat:S.curCat,curInc:S.curInc,curSec:S.curSec,curPage:S.curPage,aYear:S.aYear};
+      S = {...data, ...uiState};
+      if(!S.years) S.years = JSON.parse(JSON.stringify(SEED.years));
+      SEED.years.forEach(seedYear => {
+        const exists = S.years.find(y => y.name === seedYear.name);
+        if(!exists) {
+          const insertIdx = S.years.findIndex(y => y.name > seedYear.name);
+          if(insertIdx === -1) S.years.push(JSON.parse(JSON.stringify(seedYear)));
+          else S.years.splice(insertIdx, 0, JSON.parse(JSON.stringify(seedYear)));
+          setTimeout(() => save(), 800);
+        }
+      });
+      S.years.forEach(y=>y.months.forEach(m=>{if(!m.incomeSources)m.incomeSources=[];}));
+      if(S.curY >= S.years.length) S.curY = S.years.length - 1;
+      if(!isLoaded) {
+        const savedY = localStorage.getItem('budget_curY');
+        const savedM = localStorage.getItem('budget_curM');
+        if(savedY !== null && savedM !== null) {
+          const sy = parseInt(savedY), sm = parseInt(savedM);
+          if(sy >= 0 && sy < S.years.length && sm >= 0 && sm < (S.years[sy]?.months?.length||0)) {
+            S.curY = sy; S.curM = sm;
+          } else {
+            S.curY = S.years.length - 1; S.curM = 0;
+          }
         } else {
           S.curY = S.years.length - 1; S.curM = 0;
         }
-      } else {
-        S.curY = S.years.length - 1; S.curM = 0;
       }
     }
-  }
-  if(!isLoaded){ isLoaded=true; }
-  setStatus('✅ متزامن', 'sync-ok');
-  render();
-}, (err) => {
-  setStatus('❌ خطأ في الاتصال', 'sync-err');
-  render();
-});
+    if(!isLoaded){ isLoaded=true; }
+    setStatus('✅ متزامن', 'sync-ok');
+    render();
+  }, (err) => {
+    setStatus('❌ خطأ في الاتصال', 'sync-err');
+    render();
+  });
+}
 
 function save(){
   setStatus('⏳ جاري الحفظ...', 'sync-load');
@@ -509,112 +487,139 @@ function renderSummary(){
     `<div style="font-size:11px;font-weight:700;color:#666;margin-bottom:6px;margin-top:${srcs.length?'12px':'0'};text-transform:uppercase">📤 المصروفات</div>`+
     CATS.map(c=>`<div class="sum-item"><div class="sum-row"><span>${c.n}</span><span style="color:${c.c};font-weight:600">${fmt(bc[c.k])} ج</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(bc[c.k]/maxC*100)}%;background:${c.c}"></div></div></div>`).join('')+
     `<div class="total-row"><span>إجمالي المصروفات</span><span>${fmt(exp)} ج</span></div>`+
-    (inc>0?`<div class="total-row"><span>المتبقي</span><span style="color:${inc-exp>=0?'#16a34a':'#DC2626'}">${inc-exp>=0?'+':''}${fmt(inc-exp)} ج</span></div>`:'');
+    (inc>0?`<div class="total-row" style="border-top:none;margin-top:0;font-size:11px;color:var(--txt2)"><span>صافي الوفر</span><span class="${inc-exp>=0?'green':'red'}">${inc-exp>=0?'+':''}${fmt(inc-exp)} ج</span></div>`:'');
 }
 
 function renderAnalytics(){
-  document.getElementById('yearFilt').innerHTML=[{n:'الكل',i:-1},...S.years.map((y,i)=>({n:y.name,i}))].map(y=>`<button class="yfbtn ${S.aYear===y.i?'active':''}" onclick="switchAY(${y.i})">${y.n}</button>`).join('');
-  let months=[];
-  if(S.aYear===-1) S.years.forEach((y,yi)=>y.months.forEach((m,mi)=>months.push({m,label:y.name+' '+m.name})));
-  else{ const y=S.years[S.aYear]; if(y) y.months.forEach((m,mi)=>months.push({m,label:m.name})); }
-  if(!months.length){['aKpis','bestWorst','netChart','incExpChart','catChart','saveChart'].forEach(id=>document.getElementById(id).innerHTML='<div class="empty">مفيش بيانات</div>');return;}
-  const nets=months.map(({m})=>totalInc(m)-totalExp(m));
-  const incs=months.map(({m})=>totalInc(m));
-  const exps=months.map(({m})=>totalExp(m));
-  const totInc=incs.reduce((a,v)=>a+v,0),totExp=exps.reduce((a,v)=>a+v,0),totNet=nets.reduce((a,v)=>a+v,0);
-  const avgSave=totInc>0?Math.round(totNet/totInc*100):0;
-  document.getElementById('aKpis').innerHTML=`
-    <div class="kpi"><div class="kpi-lbl">إجمالي الدخل</div><div class="kpi-val green">${fmt(totInc)} ج</div></div>
-    <div class="kpi"><div class="kpi-lbl">إجمالي المصروفات</div><div class="kpi-val red">${fmt(totExp)} ج</div></div>
-    <div class="kpi"><div class="kpi-lbl">إجمالي المتبقي</div><div class="kpi-val ${totNet>=0?'green':'red'}">${totNet>=0?'+':''}${fmt(totNet)} ج</div></div>
-    <div class="kpi"><div class="kpi-lbl">متوسط التوفير</div><div class="kpi-val ${avgSave>=0?'green':'red'}">${avgSave}%</div></div>
-    <div class="kpi"><div class="kpi-lbl">عدد الشهور</div><div class="kpi-val gray">${months.length}</div></div>`;
-  const bi=nets.indexOf(Math.max(...nets)),wi=nets.indexOf(Math.min(...nets));
-  document.getElementById('bestWorst').innerHTML=`
-    <div class="hl-card" style="background:#F0FDF4"><div class="hl-lbl">🏆 أفضل شهر</div><div class="hl-name" style="color:#15803D">${months[bi].label}</div><div class="hl-val" style="color:#16a34a">صافي +${fmt(nets[bi])} ج</div></div>
-    <div class="hl-card" style="background:#FEF2F2"><div class="hl-lbl">⚠️ أسوأ شهر</div><div class="hl-name" style="color:#B91C1C">${months[wi].label}</div><div class="hl-val" style="color:#DC2626">صافي ${fmt(nets[wi])} ج</div></div>`;
-  const maxN=Math.max(...nets.map(Math.abs),1);
-  document.getElementById('netChart').innerHTML=months.map(({label},i)=>`<div class="bar-row"><div class="bar-label">${label}</div><div class="bar-track2"><div class="bar-fill2" style="width:${Math.round(Math.abs(nets[i])/maxN*100)}%;background:${nets[i]>=0?'#16a34a':'#DC2626'}"></div></div><div class="bar-val" style="color:${nets[i]>=0?'#16a34a':'#DC2626'}">${nets[i]>=0?'+':''}${fmt(nets[i])}</div></div>`).join('');
-  const maxIE=Math.max(...incs,...exps,1);
-  document.getElementById('incExpChart').innerHTML=months.map(({label},i)=>`<div style="margin-bottom:10px"><div style="font-size:10px;color:#999;margin-bottom:3px;font-weight:600">${label}</div><div style="display:flex;align-items:center;gap:6px;font-size:10px;margin-bottom:2px"><span style="width:35px;color:#16a34a;text-align:right">دخل</span><div class="bar-track2" style="flex:1"><div class="bar-fill2" style="width:${Math.round(incs[i]/maxIE*100)}%;background:#16a34a"></div></div><span style="width:90px;color:#16a34a;font-weight:600">${fmt(incs[i])}</span></div><div style="display:flex;align-items:center;gap:6px;font-size:10px"><span style="width:35px;color:#DC2626;text-align:right">مصروف</span><div class="bar-track2" style="flex:1"><div class="bar-fill2" style="width:${Math.round(exps[i]/maxIE*100)}%;background:#DC2626"></div></div><span style="width:90px;color:#DC2626;font-weight:600">${fmt(exps[i])}</span></div></div>`).join('');
-  const totBC={}; CATS.forEach(c=>totBC[c.k]=0);
-  months.forEach(({m})=>{const bc=byCat(m);CATS.forEach(c=>totBC[c.k]+=bc[c.k]);});
-  const maxBC=Math.max(...Object.values(totBC),1);
-  document.getElementById('catChart').innerHTML=CATS.map(c=>`<div class="bar-row"><div class="bar-label">${c.n}</div><div class="bar-track2"><div class="bar-fill2" style="width:${Math.round(totBC[c.k]/maxBC*100)}%;background:${c.c}"></div></div><div class="bar-val" style="color:${c.c}">${fmt(totBC[c.k])}</div></div>`).join('');
-  document.getElementById('saveChart').innerHTML=months.map(({label},i)=>{const pct=incs[i]>0?Math.round(nets[i]/incs[i]*100):0;return `<div class="bar-row"><div class="bar-label">${label}</div><div class="bar-track2"><div class="bar-fill2" style="width:${Math.min(Math.abs(pct),100)}%;background:${pct>=0?'#16a34a':'#DC2626'}"></div></div><div class="bar-val" style="color:${pct>=0?'#16a34a':'#DC2626'}">${pct}%</div></div>`;}).join('');
+  const fYears = S.aYear === -1 ? S.years : S.years.filter((_,idx)=>idx===S.aYear);
+  document.getElementById('yearFilt').innerHTML = `<button class="yfbtn ${S.aYear===-1?'active':''}" onclick="filterAYear(-1)">الكل</button>` + S.years.map((y,idx)=>`<button class="yfbtn ${S.aYear===idx?'active':''}" onclick="filterAYear(${idx})">${y.name}</button>`).join('');
+
+  let tInc=0, tExp=0, mCount=0, bestM={net:-999999,n:''}, worstM={net:999999,n:''};
+  let monthlyData = [];
+  let catTotals = {}; CATS.forEach(c=>catTotals[c.k]=0);
+
+  fYears.forEach(y=>{
+    y.months.forEach(m=>{
+      const inc=totalInc(m), exp=totalExp(m), net=inc-exp;
+      if(inc>0 || exp>0){
+        tInc+=inc; tExp+=exp; mCount++;
+        monthlyData.push({lbl:`${y.name} - ${m.name}`, inc, exp, net, savePct:inc>0?Math.round(net/inc*100):0});
+        if(net > bestM.net) bestM = {net, n:`${y.name} - ${m.name}`};
+        if(net < worstM.net) worstM = {net, n:`${y.name} - ${m.name}`};
+        const bc=byCat(m); CATS.forEach(c=>catTotals[c.k]+=bc[c.k]);
+      }
+    });
+  });
+
+  document.getElementById('aKpis').innerHTML = `
+    <div class="kpi"><div class="kpi-lbl">إجمالي الدخل</div><div class="kpi-val green">${fmt(tInc)} ج</div></div>
+    <div class="kpi"><div class="kpi-lbl">إجمالي المصروفات</div><div class="kpi-val red">${fmt(tExp)} ج</div></div>
+    <div class="kpi"><div class="kpi-lbl">إجمالي الصافي</div><div class="kpi-val ${tInc-tExp>=0?'green':'red'}">${fmt(tInc-tExp)} ج</div></div>
+    <div class="kpi"><div class="kpi-lbl">معدل التوفير العام</div><div class="kpi-val green">${tInc>0?Math.round((tInc-tExp)/tInc*100):0}%</div></div>`;
+
+  if(!mCount){
+    ['bestWorst','netChart','incExpChart','catChart','saveChart'].forEach(id=>document.getElementById(id).innerHTML='<div class="empty">لا توجد بيانات كافية للتقارير</div>');
+    return;
+  }
+
+  document.getElementById('bestWorst').innerHTML = `
+    <div class="hl-card" style="background:var(--greenbg);color:var(--greentc)"><div class="hl-lbl">أفضل شهر وفر</div><div class="hl-name">${bestM.n}</div><div class="hl-val">+${fmt(bestM.net)} ج</div></div>
+    <div class="hl-card" style="background:var(--redbg);color:var(--redtc)"><div class="hl-lbl">أكثر شهر عجز</div><div class="hl-name">${worstM.n}</div><div class="hl-val">${fmt(worstM.net)} ج</div></div>`;
+
+  const maxNet = Math.max(...monthlyData.map(d=>Math.abs(d.net)), 1);
+  document.getElementById('netChart').innerHTML = monthlyData.map(d=>`
+    <div class="bar-row">
+      <div class="bar-label" title="${d.lbl}">${d.lbl}</div>
+      <div class="bar-track2"><div class="bar-fill2" style="width:${Math.round(Math.abs(d.net)/maxNet*100)}%;background:${d.net>=0?'var(--green)':'var(--red)'};margin-right:${d.net<0?'auto':'0'}"></div></div>
+      <div class="bar-val ${d.net>=0?'green':'red'}">${d.net>=0?'+':''}${fmt(d.net)} ج</div>
+    </div>`).join('');
+
+  const maxIE = Math.max(...monthlyData.map(d=>Math.max(d.inc, d.exp)), 1);
+  document.getElementById('incExpChart').innerHTML = monthlyData.map(d=>`
+    <div class="bar-row" style="margin-bottom:10px;">
+      <div class="bar-label" style="font-weight:700;">${d.lbl}</div>
+      <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <div style="width:50px; font-size:9px; color:var(--green); text-align:left;">دخل</div>
+          <div class="bar-track2" style="height:8px;"><div class="bar-fill2" style="width:${Math.round(d.inc/maxIE*100)}%;background:var(--green)"></div></div>
+          <div style="width:70px; font-size:10px; font-weight:600; text-align:left; color:var(--green);">${fmt(d.inc)} ج</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <div style="width:50px; font-size:9px; color:var(--red); text-align:left;">صرف</div>
+          <div class="bar-track2" style="height:8px;"><div class="bar-fill2" style="width:${Math.round(d.exp/maxIE*100)}%;background:var(--red)"></div></div>
+          <div style="width:70px; font-size:10px; font-weight:600; text-align:left; color:var(--red);">${fmt(d.exp)} ج</div>
+        </div>
+      </div>
+    </div>`).join('');
+
+  const maxCat = Math.max(...Object.values(catTotals), 1);
+  document.getElementById('catChart').innerHTML = CATS.map(c=>`
+    <div class="bar-row">
+      <div class="bar-label">${c.n}</div>
+      <div class="bar-track2"><div class="bar-fill2" style="width:${Math.round(catTotals[c.k]/maxCat*100)}%;background:${c.c}"></div></div>
+      <div class="bar-val" style="color:${c.c}">${fmt(catTotals[c.k])} ج</div>
+    </div>`).join('');
+
+  document.getElementById('saveChart').innerHTML = monthlyData.map(d=>`
+    <div class="bar-row">
+      <div class="bar-label">${d.lbl}</div>
+      <div class="bar-track2"><div class="bar-fill2" style="width:${Math.max(0, Math.min(100, d.savePct))}%;background:var(--purple)"></div></div>
+      <div class="bar-val purple" style="color:var(--purpletc)">${d.savePct}%</div>
+    </div>`).join('');
 }
 
-// ─── ACTIONS ───
-window.toggleYear = yi => {
-  S.curY=yi;
-  if(S.years[yi].months.length) S.curM=0;
-  localStorage.setItem('budget_curY', S.curY);
-  localStorage.setItem('budget_curM', S.curM);
-  render();
-};
-window.selMonth = (yi,mi) => {
-  S.curY=yi; S.curM=mi;
-  localStorage.setItem('budget_curY', yi);
-  localStorage.setItem('budget_curM', mi);
-  render();
-  if(window.innerWidth <= 768) {
-    document.getElementById('sidebar').classList.remove('mob-open');
-    document.getElementById('sidebarBackdrop').style.display='none';
-  }
-};
-window.switchCat = k => { S.curCat=k; renderChips(); renderItems(); };
-window.switchInc = k => { S.curInc=k; renderChips(); renderIncList(); };
-window.switchSection = s => {
-  S.curSec=s;
-  document.getElementById('secExp').style.display=s==='exp'?'':'none';
-  document.getElementById('secInc').style.display=s==='inc'?'':'none';
-  document.getElementById('stab1').classList.toggle('active',s==='exp');
-  document.getElementById('stab2').classList.toggle('active',s==='inc');
-};
-window.switchPage = p => {
-  S.curPage=p;
-  document.getElementById('pageDetail').style.display=p==='detail'?'':'none';
-  document.getElementById('pageAnalytics').style.display=p==='analytics'?'':'none';
-  document.getElementById('ptab1').classList.toggle('active',p==='detail');
-  document.getElementById('ptab2').classList.toggle('active',p==='analytics');
-  if(p==='analytics') renderAnalytics();
-};
-window.switchAY = i => { S.aYear=i; renderAnalytics(); };
+window.toggleYear = (idx) => { S.curY = idx; S.curM = 0; localStorage.setItem('budget_curY', idx); localStorage.setItem('budget_curM', 0); render(); };
+window.selMonth = (yi, mi) => { S.curY = yi; S.curM = mi; localStorage.setItem('budget_curY', yi); localStorage.setItem('budget_curM', mi); render(); if(window.innerWidth<=768) toggleSidebar(); };
+window.switchCat = (k) => { S.curCat = k; renderItems(); };
+window.switchInc = (k) => { S.curInc = k; renderIncList(); };
+window.switchSection = (sec) => { S.curSec = sec; document.getElementById('stab1').classList.toggle('active', sec==='exp'); document.getElementById('stab2').classList.toggle('active', sec==='inc'); document.getElementById('secExp').style.display = sec==='exp'?'block':'none'; document.getElementById('secInc').style.display = sec==='inc'?'block':'none'; };
+window.switchPage = (page) => { S.curPage = page; document.getElementById('ptab1').classList.toggle('active', page==='detail'); document.getElementById('ptab2').classList.toggle('active', page==='analytics'); document.getElementById('pageDetail').style.display = page==='detail'?'block':'none'; document.getElementById('pageAnalytics').style.display = page==='analytics'?'block':'none'; render(); };
+window.filterAYear = (idx) => { S.aYear = idx; renderAnalytics(); };
 
 window.addItem = () => {
-  const n=document.getElementById('iName').value.trim(), a=parseFloat(document.getElementById('iAmt').value);
-  if(!n||!a||a<=0) return;
-  const m=curM(); if(!m) return;
-  if(!m.items) m.items=[];
-  m.items.push({cat:S.curCat,name:n,amt:a});
-  document.getElementById('iName').value=''; document.getElementById('iAmt').value='';
-  save(); renderKPIs(); renderItems(); renderSummary();
+  const nEl=document.getElementById('iName'), aEl=document.getElementById('iAmt'), m=curM();
+  if(!m || !nEl.value.trim() || !aEl.value) return;
+  if(!m.items) m.items = [];
+  m.items.push({cat:S.curCat, name:nEl.value.trim(), amt:parseFloat(aEl.value)});
+  nEl.value=''; aEl.value=''; nEl.focus(); save(); render();
 };
-window.addInc = () => {
-  const n=document.getElementById('incName').value.trim(), a=parseFloat(document.getElementById('incAmt').value);
-  if(!n||!a||a<=0) return;
-  const m=curM(); if(!m) return;
-  if(!m.incomeSources) m.incomeSources=[];
-  m.incomeSources.push({cat:S.curInc,name:n,amt:a});
-  document.getElementById('incName').value=''; document.getElementById('incAmt').value='';
-  save(); renderKPIs(); renderIncList(); renderSummary();
-};
-window.delItem = ri => { const m=curM(); m.items.splice(ri,1); save(); renderKPIs(); renderItems(); renderSummary(); };
-window.delInc = ri => { const m=curM(); m.incomeSources.splice(ri,1); save(); renderKPIs(); renderIncList(); renderSummary(); };
+window.delItem = (idx) => { const m=curM(); if(m && m.items) { m.items.splice(idx,1); save(); render(); } };
 
-window.openModal = (type,yi) => {
-  if(type==='year'){ document.getElementById('mYear').classList.add('open'); document.getElementById('mYearInput').focus(); }
-  else{ pMY=yi; document.getElementById('mMonthTitle').textContent='إضافة شهر في '+S.years[yi].name; document.getElementById('mMonth').classList.add('open'); document.getElementById('mMonthInput').value=''; document.getElementById('mMonthInput').focus(); }
+window.addInc = () => {
+  const nEl=document.getElementById('incName'), aEl=document.getElementById('incAmt'), m=curM();
+  if(!m || !nEl.value.trim() || !aEl.value) return;
+  if(!m.incomeSources) m.incomeSources = [];
+  m.incomeSources.push({cat:S.curInc, name:nEl.value.trim(), amt:parseFloat(aEl.value)});
+  nEl.value=''; aEl.value=''; nEl.focus(); save(); render();
 };
-window.openRM = (yi,mi) => { pMY=yi; pMI=mi; document.getElementById('mRenameMInput').value=S.years[yi].months[mi].name; document.getElementById('mRenameM').classList.add('open'); document.getElementById('mRenameMInput').focus(); };
-window.openRY = yi => { pY=yi; document.getElementById('mRenameYInput').value=S.years[yi].name; document.getElementById('mRenameY').classList.add('open'); document.getElementById('mRenameYInput').focus(); };
-window.closeModals = () => { document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('open')); pY=pMY=pMI=null; };
-window.confirmYear = () => { const n=document.getElementById('mYearInput').value.trim(); if(!n) return; S.years.push({name:n,months:[]}); S.curY=S.years.length-1; S.curM=0; closeModals(); save(); render(); };
-window.confirmMonth = () => { const n=document.getElementById('mMonthInput').value.trim(); if(!n||pMY===null) return; S.years[pMY].months.push({name:n,incomeSources:[],income:0,items:[]}); S.curY=pMY; S.curM=S.years[pMY].months.length-1; closeModals(); save(); render(); };
-window.confirmRenameM = () => { const n=document.getElementById('mRenameMInput').value.trim(); if(!n||pMY===null) return; S.years[pMY].months[pMI].name=n; closeModals(); save(); render(); };
-window.confirmRenameY = () => { const n=document.getElementById('mRenameYInput').value.trim(); if(!n||pY===null) return; S.years[pY].name=n; closeModals(); save(); render(); };
-window.delYear = yi => { if(S.years.length<=1){alert('لازم يكون فيه سنة واحدة على الأقل');return;} if(!confirm('هتحذف السنة دي وكل بياناتها؟')) return; S.years.splice(yi,1); S.curY=Math.min(S.curY,S.years.length-1); S.curM=0; save(); render(); };
-window.delMonth = (yi,mi) => { if(!confirm('هتحذف الشهر ده وكل بياناته؟')) return; S.years[yi].months.splice(mi,1); if(yi===S.curY) S.curM=Math.max(0,Math.min(S.curM,S.years[yi].months.length-1)); save(); render(); };
+window.delInc = (idx) => { const m=curM(); if(m && m.incomeSources) { m.incomeSources.splice(idx,1); save(); render(); } };
+
+window.openModal = (type, yi=null) => {
+  closeModals();
+  if(type==='year') document.getElementById('mYear').classList.add('open');
+  if(type==='month') { pY=yi; document.getElementById('mMonthTitle').textContent=`إضافة شهر لـ ${S.years[yi].name}`; document.getElementById('mMonth').classList.add('open'); }
+};
+window.closeModals = () => { document.querySelectorAll('.overlay:not(#authOverlay)').forEach(o=>o.classList.remove('open')); };
+
+window.confirmYear = () => {
+  const inp=document.getElementById('mYearInput'); if(!inp.value) return;
+  S.years.push({name:inp.value, months:[]}); S.years.sort((a,b)=>a.name.localeCompare(b.name));
+  S.curY=S.years.findIndex(y=>y.name===inp.value); S.curM=0; inp.value=''; closeModals(); save(); render();
+};
+window.confirmMonth = () => {
+  const inp=document.getElementById('mMonthInput'); if(!inp.value.trim() || pY===null) return;
+  S.years[pY].months.push({name:inp.value.trim(), incomeSources:[], income:0, items:[]});
+  S.curY=pY; S.curM=S.years[pY].months.length-1; inp.value=''; closeModals(); save(); render();
+};
+
+window.openRY = (yi) => { pY=yi; document.getElementById('mRenameYInput').value=S.years[yi].name; document.getElementById('mRenameY').classList.add('open'); };
+window.confirmRenameY = () => { const inp=document.getElementById('mRenameYInput'); if(inp.value.trim() && pY!==null){ S.years[pY].name=inp.value.trim(); closeModals(); save(); render(); } };
+
+window.openRM = (yi, mi) => { pMY=yi; pMI=mi; document.getElementById('mRenameMInput').value=S.years[yi].months[mi].name; document.getElementById('mRenameM').classList.add('open'); };
+window.confirmRenameM = () => { const inp=document.getElementById('mRenameMInput'); if(inp.value.trim() && pMY!==null && pMI!==null){ S.years[pMY].months[pMI].name=inp.value.trim(); closeModals(); save(); render(); } };
+
+window.delYear = (yi) => { if(confirm(`مسح سنة ${S.years[yi].name} باللي فيها؟`)){ S.years.splice(yi,1); if(S.curY>=S.years.length) S.curY=Math.max(0,S.years.length-1); S.curM=0; save(); render(); } };
+window.delMonth = (yi, mi) => { if(confirm(`مسح شهر ${S.years[yi].months[mi].name}؟`)){ S.years[yi].months.splice(mi,1); if(yi===S.curY) S.curM=Math.max(0,Math.min(S.curM,S.years[yi].months.length-1)); save(); render(); } };
 
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) closeModals(); }));
 document.getElementById('iAmt').addEventListener('keydown',e=>e.key==='Enter'&&addItem());
@@ -633,7 +638,7 @@ window.toggleSidebar = () => {
   if(isMobile) {
     const willOpen = !sb.classList.contains('mob-open');
     sb.classList.toggle('mob-open', willOpen);
-    bd.style.display = willOpen ? 'block' : 'none';
+    bd.style.display = willOpen?'block':'none';
   } else {
     sb.classList.toggle('collapsed');
   }
